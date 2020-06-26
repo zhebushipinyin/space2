@@ -32,6 +32,7 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, pos_start=(0, 0))
     myMouse = event.Mouse()
     state = 'wait'
     clk.reset()  # 初始时钟
+    feedback = visual.Circle(win, radius=0.3, fillColor=[0.5, 0.5, 0.5], lineColor=[0.5, 0.5, 0.5])
 
     while True:
         # 初始状态
@@ -55,7 +56,7 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, pos_start=(0, 0))
             text_p.text = u'请估计你击中该目标的概率%s%%' % np.round(p)
             text_p.draw()
             win.flip()
-            if myMouse.isPressedIn(stp):
+            if stp.contains(myMouse.getPos()):
                 x0, y0 = myMouse.getPos()
                 state = 'running'
         # 初始&等待刺激
@@ -78,16 +79,11 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, pos_start=(0, 0))
             stim.draw()
             stp.draw()
             win.flip()
-            buttons = myMouse.getPressed(getTime=True)
+            buttons = myMouse.getPos()
             t = clk.getTime()
-            if myMouse.isPressedIn(stim):
+            if stim.contains(buttons):
                 state = 'hit'
                 resp = 'hit'
-                x1, y1 = myMouse.getPos()
-                rt = t
-            elif sum(buttons[0]):
-                state = 'miss'
-                resp = 'miss'
                 x1, y1 = myMouse.getPos()
                 rt = t
             # 超过1s
@@ -96,12 +92,19 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, pos_start=(0, 0))
                 resp = 'no_response'
                 x1, y1 = myMouse.getPos()
                 rt = t
+            elif not (stp.contains(buttons)):
+                state = 'miss'
+                resp = 'miss'
+                x1, y1 = myMouse.getPos()
+                rt = t
         # 击中
         elif state == 'hit':
             stp.draw()
             stim.draw()
             txt['hit'].pos = (x1-2, y1-2)
             txt['hit'].draw()
+            feedback.pos = (x1, y1)
+            feedback.draw()
             win.flip()
             state = 'quit'
         # 未击中
@@ -110,6 +113,8 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, pos_start=(0, 0))
             stim.draw()
             txt['miss'].pos = (x1-2, y1-2)
             txt['miss'].draw()
+            feedback.pos = (x1, y1)
+            feedback.draw()
             win.flip()
             state = 'quit'
         # 无反应
@@ -118,6 +123,8 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, pos_start=(0, 0))
             stim.draw()
             txt['no_response'].pos = (x1-2, y1-2)
             txt['no_response'].draw()
+            feedback.pos = (x1, y1)
+            feedback.draw()
             win.flip()
             state = 'quit'
         # 结束本试次

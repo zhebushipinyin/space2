@@ -32,7 +32,7 @@ while True:
     stp.draw()
     slider.draw()
     win.flip()
-    if (slider.getRating() != None) & (myMouse.isPressedIn(stp)):
+    if (slider.getRating() is not None) & (myMouse.isPressedIn(stp)):
         break
 stp.fillColor =[0, 1, 0]
 #stim.draw()

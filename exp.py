@@ -30,7 +30,7 @@ theta = [45, 90, 135]  # 刺激角度，三个水平
 r =10  # 刺激距起始点距离，半径，cm, 10
 repeat = 5  # 每个条件重复次数
 stp_size = 0.5  # 起始点大小，半径，单位cm
-stp_pos_y = -3  # 起始点纵坐标，以屏幕中心点为原点，下方为负，横坐标为0，单位cm
+stp_pos_y = -4  # 起始点纵坐标，以屏幕中心点为原点，下方为负，横坐标为0，单位cm
 # 生成trial
 df = generate(stim_size, theta, r, repeat, stp_size, stp_pos_y)
 df.to_csv('trial.csv')
@@ -42,12 +42,12 @@ fix = visual.ImageStim(win, pos=(0, 0), image='icon/fix.png')
 stim = visual.Circle(win, radius=0.2, fillColor=[0.5, 0.5, 0.5], lineColor=[0.5, 0.5, 0.5])
 stp = visual.Circle(win, radius=0.5, fillColor=[0.5, 0.5, 0.5], lineColor=[0.5, 0.5, 0.5])
 slider = visual.Slider(win, ticks=range(101), labels=list(np.arange(11) * 10),
-                       pos=(0, -5), size=(16, 0.5), granularity=0, style='triangleMarker')
+                       pos=(0, -2), size=(16, 0.5), granularity=0, style='triangleMarker')
 
 hit_text = visual.TextStim(win, bold=True, color='yellow', text=u'击中')
 miss_text = visual.TextStim(win, bold=True, color='purple', text=u'未击中')
 no_response_text = visual.TextStim(win, bold=True, color='purple', text=u'超时')
-text_p = visual.TextStim(win, text=u'请估计你击中该目标的概率%s%%' % "?", pos=(-4.5, -4), height=0.5)
+text_p = visual.TextStim(win, text=u'请估计你击中该目标的概率%s%%' % "?", pos=(-4.5, -1), height=0.5)
 txt = {'hit': hit_text, 'miss': miss_text, 'no_response': no_response_text}
 # r = 0.4*h
 myMouse = event.Mouse()
