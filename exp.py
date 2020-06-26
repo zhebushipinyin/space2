@@ -31,6 +31,7 @@ r =10  # 刺激距起始点距离，半径，cm, 10
 repeat = 5  # 每个条件重复次数
 stp_size = 0.5  # 起始点大小，半径，单位cm
 stp_pos_y = -4  # 起始点纵坐标，以屏幕中心点为原点，下方为负，横坐标为0，单位cm
+sound_file = ['sound\\right.wav', 'sound\\wrong.wav']
 # 生成trial
 df = generate(stim_size, theta, r, repeat, stp_size, stp_pos_y)
 df.to_csv('trial.csv')
@@ -65,7 +66,8 @@ for i in range(len(df)):
     win.flip()
     pos_start = (0, stp_pos_y)
     slider.reset()
-    p_i, t_p_i, x0_i, y0_i, x1_i, y1_i, resp_i, rt_i, t_soa_i = run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, pos_start)
+    p_i, t_p_i, x0_i, y0_i, x1_i, y1_i, resp_i, rt_i, t_soa_i = run_trial(i, win, df, clk, slider, stim, stp, text_p,
+                                                                          txt, sound_file, pos_start)
     result['p'].append(p_i)
     result['t_p'].append(t_p_i)
     result['x0'].append(x0_i)

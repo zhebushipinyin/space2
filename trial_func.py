@@ -5,9 +5,10 @@ import numpy as np
 from psychopy import visual, event, core
 from target import *
 import random
+from psychopy.sound import Sound
 
 
-def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, pos_start=(0, 0)):
+def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, sound, pos_start=(0, 0)):
     """
     执行运动能力测量试次，得分矩阵\\
     points = {'phase_1': ['+100', '0', '-300'], 'phase_2': ['+100', '0', '-300']}\\
@@ -21,6 +22,7 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, pos_start=(0, 0))
     :param stp: 初始位置，visual.Circle()
     :param text_p: 概率文本 visual.TextStim()
     :param txt: 文本字典，txt = {'hit':hit_text, 'miss':miss_text, 'no_response': no_response_text}
+    :param sound: 声音文件位置sound[0]:正确， sound[1]:错误
     :param pos_start: 初始点，(x, y)
     :return: 返回 概率p, 概率判断时间t_p, 初始位置(x0, y0)，落点位置(x1, y1)，反应resp, 反应时rt, soa
     """
@@ -33,6 +35,8 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, pos_start=(0, 0))
     state = 'wait'
     clk.reset()  # 初始时钟
     feedback = visual.Circle(win, radius=0.3, fillColor=[0.5, 0.5, 0.5], lineColor=[0.5, 0.5, 0.5])
+    feedback_sound_hit = Sound(sound[0])
+    feedback_sound_miss = Sound(sound[1])
 
     while True:
         # 初始状态
@@ -86,17 +90,20 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, pos_start=(0, 0))
                 resp = 'hit'
                 x1, y1 = myMouse.getPos()
                 rt = t
+                feedback_sound_hit.play()
             # 超过1s
             elif t > 1:
                 state = 'no_response'
                 resp = 'no_response'
                 x1, y1 = myMouse.getPos()
                 rt = t
+                feedback_sound_miss.play()
             elif not (stp.contains(buttons)):
                 state = 'miss'
                 resp = 'miss'
                 x1, y1 = myMouse.getPos()
                 rt = t
+                feedback_sound_miss.play()
         # 击中
         elif state == 'hit':
             stp.draw()
@@ -134,6 +141,8 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, pos_start=(0, 0))
             stp.fillColor = [0.5, 0.5, 0.5]
             stp.lineColor = [0.5, 0.5, 0.5]
             text_p.text = u'请估计你击中该目标的概率%s%%' % '?'
-            core.wait(0.2)
+            core.wait(0.4)
+            feedback_sound_miss.stop()
+            feedback_sound_hit.stop()
             break
     return p, t_p, x0, y0, x1, y1, resp, rt, t_soa
