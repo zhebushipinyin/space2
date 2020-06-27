@@ -41,7 +41,7 @@ result = {'x0': [], 'y0': [], 'x1': [], 'y1': [], 'p': [], 't_p': [], 'rt': [], 
 win = visual.Window(size=(w, h), fullscr=True, units='cm', color=[0, 0, 0], monitor=mon)
 fix = visual.ImageStim(win, pos=(0, 0), image='icon/fix.png')
 stim = visual.Circle(win, radius=0.2, fillColor=[0.5, 0.5, 0.5], lineColor=[0.5, 0.5, 0.5])
-stp = visual.Circle(win, radius=0.5, fillColor=[0.5, 0.5, 0.5], lineColor=[0.5, 0.5, 0.5])
+stp = visual.Circle(win, lineWidth=5, radius=0.5, fillColor=[0, 0, 0], lineColor=[0.5, 0.5, 0.5])
 slider = visual.Slider(win, ticks=range(101), labels=list(np.arange(11) * 10),
                        pos=(0, -2), size=(16, 0.5), granularity=0, style='triangleMarker')
 

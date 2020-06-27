@@ -68,7 +68,7 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, sound, pos_start=
             stp.fillColor = [0, 1, 0]
             stp.draw()
             win.flip()
-            stp.fillColor = [0.5, 0.5, 0.5]
+            stp.fillColor = [0, 0, 0]
             stp.lineColor = [0.5, 0.5, 0.5]
             stp.draw()
             t_soa = random.choice(soa)
@@ -138,7 +138,7 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, sound, pos_start=
         elif state == 'quit':
             stim.fillColor = [0.5, 0.5, 0.5]
             stim.lineColor = [0.5, 0.5, 0.5]
-            stp.fillColor = [0.5, 0.5, 0.5]
+            stp.fillColor = [0, 0, 0]
             stp.lineColor = [0.5, 0.5, 0.5]
             text_p.text = u'请估计你击中该目标的概率%s%%' % '?'
             core.wait(0.4)
