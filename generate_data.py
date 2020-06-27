@@ -8,7 +8,7 @@ def generate(stim_size=[0.2, 0.4, 0.6, 0.8, 1, 1.2], theta=[0, 30, 60], r=10, re
     """
     生成实验的数据
     :param stim_size: 刺激半径大小，6个水平，单位cm
-    :param theta: 角度，三个水平，°
+    :param theta: 角度
     :param r: 运动半径，cm
     :param repeat: 每种条件重复次数
     :param stp_size: 起始点大小，半径，单位cm

@@ -28,7 +28,7 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, sound, pos_start=
     """
     soa = [0.1, 0.2, 0.3]
     stim.radius = df.size_r[i]
-    stim.pos = get_xy(df.r[i], df.theta[i], pos_start)
+    stim.pos = get_xy(df.r[i], 90, pos_start)
     stp.pos = pos_start
     stp.radius = df.stp_size[i]
     myMouse = event.Mouse()
@@ -63,6 +63,7 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, sound, pos_start=
             if stp.contains(myMouse.getPos()):
                 x0, y0 = myMouse.getPos()
                 state = 'running'
+                stim.pos = get_xy(df.r[i], df.theta[i], pos_start)
         # 初始&等待刺激
         elif state == 'running':
             stp.fillColor = [0, 1, 0]
@@ -91,8 +92,8 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, sound, pos_start=
                 x1, y1 = myMouse.getPos()
                 rt = t
                 feedback_sound_hit.play()
-            # 超过1s
-            elif t > 1:
+            # 超过700ms
+            elif t > 0.7:
                 state = 'no_response'
                 resp = 'no_response'
                 x1, y1 = myMouse.getPos()
@@ -128,7 +129,7 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, sound, pos_start=
         elif state == 'no_response':
             stp.draw()
             stim.draw()
-            txt['no_response'].pos = (x1-2, y1-2)
+            txt['no_response'].pos = (0, 5)
             txt['no_response'].draw()
             feedback.pos = (x1, y1)
             feedback.draw()

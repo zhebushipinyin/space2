@@ -26,9 +26,10 @@ mon.save()  # 保存显示器信息
 
 # stim_size = [0.2, 0.4, 0.6, 0.8, 1, 1.2]  # 刺激半径大小，cm
 stim_size = [0.15, 0.3, 0.45, 0.6, 0.75, 0.9]
-theta = [45, 90, 135]  # 刺激角度，三个水平
-r =10  # 刺激距起始点距离，半径，cm, 10
-repeat = 5  # 每个条件重复次数
+# theta = [45, 90, 135]
+theta = [45, 135]  # 刺激角度，2个水平
+r = 10  # 刺激距起始点距离，半径，cm, 10
+repeat = 6  # 每个条件重复次数
 stp_size = 0.5  # 起始点大小，半径，单位cm
 stp_pos_y = -4  # 起始点纵坐标，以屏幕中心点为原点，下方为负，横坐标为0，单位cm
 sound_file = ['sound\\right.wav', 'sound\\wrong.wav']
@@ -54,7 +55,7 @@ txt = {'hit': hit_text, 'miss': miss_text, 'no_response': no_response_text}
 myMouse = event.Mouse()
 
 # 指导语
-visual.TextStim(win, bold=True, text='阶段一，点击鼠标开始', height=1).draw()
+visual.TextStim(win, bold=True, text='双击屏幕或点击鼠标开始实验', height=1).draw()
 win.flip()
 while sum(myMouse.getPressed(getTime=True)[0]) == 0:
     continue
@@ -63,6 +64,11 @@ clk = clock.Clock()
 clk.reset()
 for i in range(len(df)):
     print(i)
+    if i == len(df)//2:
+        visual.TextStim(win, bold=True, text='请休息一下，双击屏幕或点击鼠标继续', height=1).draw()
+        win.flip()
+        while sum(myMouse.getPressed(getTime=True)[0]) == 0:
+            continue
     win.flip()
     pos_start = (0, stp_pos_y)
     slider.reset()
@@ -99,8 +105,10 @@ df['sex'] = [sex]*len(df)
 df['age'] = [age]*len(df)
 df['distance'] = [distance]*len(df)
 df.to_csv('exp_data\\%s_%s.csv' % (name, time.strftime("%H-%M-%S")))
-visual.TextStim(win, text='本次实验结束').draw()
+visual.TextStim(win, text='您本试实验估计正确率为：%s%%' % np.round(df.p.mean(), 1), pos=(0, 1)).draw()
+visual.TextStim(win, text='您本试实验实际正确率为：%s%%' % np.round(len(df[df.response == 'hit'])*100/len(df), 1), pos=(0, -1)).draw()
+visual.TextStim(win, text='本次实验结束', pos=(-8, 4)).draw()
 win.flip()
-core.wait(2)
+core.wait(5)
 win.close()
 core.quit()
