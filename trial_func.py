@@ -32,7 +32,7 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, sound, pos_start=
     stp.pos = pos_start
     stp.radius = df.stp_size[i]
     myMouse = event.Mouse()
-    state = 'wait'
+    state = 'onset'
     clk.reset()  # 初始时钟
     feedback = visual.Circle(win, radius=0.3, fillColor=[0.5, 0.5, 0.5], lineColor=[0.5, 0.5, 0.5])
     feedback_sound_hit = Sound(sound[0])
@@ -40,7 +40,13 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, sound, pos_start=
 
     while True:
         # 初始状态
-        if state == 'wait':
+        if state == 'onset':
+            stim.draw()
+            stp.draw()
+            win.flip()
+            core.wait(1)
+            state = 'wait'
+        elif state == 'wait':
             stim.draw()
             stp.draw()
             slider.draw()
@@ -57,7 +63,7 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, sound, pos_start=
             slider.draw()
             p = slider.getRating()
             t_p = slider.getRT()
-            text_p.text = u'请估计你击中该目标的概率%s%%' % np.round(p)
+            text_p.text = u'请估计你击中该目标的概率: %s%%' % int(p)
             text_p.draw()
             win.flip()
             if stp.contains(myMouse.getPos()):
@@ -76,7 +82,7 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, sound, pos_start=
             core.wait(t_soa)
             win.flip()
             state = 'click'
-            stim.fillColor = [1, 1, 1]
+            stim.fillColor = [1, 0, -1]
             stim.lineColor = [1, 1, 1]
             clk.reset()
         # 开始反应
@@ -137,11 +143,11 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, sound, pos_start=
             state = 'quit'
         # 结束本试次
         elif state == 'quit':
-            stim.fillColor = [0.5, 0.5, 0.5]
-            stim.lineColor = [0.5, 0.5, 0.5]
+            stim.fillColor = [1, 0, -1]
+            stim.lineColor = [1, 1, 1]
             stp.fillColor = [0, 0, 0]
             stp.lineColor = [0.5, 0.5, 0.5]
-            text_p.text = u'请估计你击中该目标的概率%s%%' % '?'
+            text_p.text = u'请估计你击中该目标的概率: %s%%' % '?'
             core.wait(0.4)
             feedback_sound_miss.stop()
             feedback_sound_hit.stop()

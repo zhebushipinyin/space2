@@ -41,15 +41,16 @@ result = {'x0': [], 'y0': [], 'x1': [], 'y1': [], 'p': [], 't_p': [], 'rt': [], 
 
 win = visual.Window(size=(w, h), fullscr=True, units='cm', color=[0, 0, 0], monitor=mon)
 fix = visual.ImageStim(win, pos=(0, 0), image='icon/fix.png')
-stim = visual.Circle(win, radius=0.2, fillColor=[0.5, 0.5, 0.5], lineColor=[0.5, 0.5, 0.5])
+stim = visual.Circle(win, radius=0.2, fillColor=[1, 0, -1], lineColor=[1, 1, 1])
 stp = visual.Circle(win, lineWidth=5, radius=0.5, fillColor=[0, 0, 0], lineColor=[0.5, 0.5, 0.5])
 slider = visual.Slider(win, ticks=range(101), labels=list(np.arange(11) * 10),
-                       pos=(0, -2), size=(16, 0.5), granularity=0, style='triangleMarker')
-
+                       pos=(0, 1), size=(16, 0.5), granularity=0, style='rating')
+slider.marker.setColor([1, 0, -1], 'rgb')
 hit_text = visual.TextStim(win, bold=True, color='yellow', text=u'击中')
 miss_text = visual.TextStim(win, bold=True, color='purple', text=u'未击中')
 no_response_text = visual.TextStim(win, bold=True, color='purple', text=u'超时')
-text_p = visual.TextStim(win, text=u'请估计你击中该目标的概率%s%%' % "?", pos=(-4.5, -1), height=0.5)
+text_p = visual.TextStim(win, text=u'请估计你击中该目标的概率: %s%%' % "?", pos=(-4.5, 2), height=0.5)
+fix = visual.ImageStim(win, pos=(0, 0), image='icon/fix.png')
 txt = {'hit': hit_text, 'miss': miss_text, 'no_response': no_response_text}
 # r = 0.4*h
 myMouse = event.Mouse()
@@ -72,6 +73,9 @@ for i in range(len(df)):
     win.flip()
     pos_start = (0, stp_pos_y)
     slider.reset()
+    fix.draw()
+    win.flip()
+    core.wait(0.2)
     p_i, t_p_i, x0_i, y0_i, x1_i, y1_i, resp_i, rt_i, t_soa_i = run_trial(i, win, df, clk, slider, stim, stp, text_p,
                                                                           txt, sound_file, pos_start)
     result['p'].append(p_i)
