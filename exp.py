@@ -25,19 +25,21 @@ mon.setSizePix((1280, 720))  # 设置显示器分辨率
 mon.save()  # 保存显示器信息
 
 # stim_size = [0.2, 0.4, 0.6, 0.8, 1, 1.2]  # 刺激半径大小，cm
-stim_size = [0.15, 0.3, 0.45, 0.6, 0.75, 0.9]
+# stim_size = [0.15, 0.3, 0.45, 0.6, 0.75, 0.9]
+# 刺激大小改为等比数列，五个水平
+stim_size = [0.2, 0.28, 0.39,  0.55, 0.75]
 # theta = [45, 90, 135]
 theta = [45, 135]  # 刺激角度，2个水平
-r = 10  # 刺激距起始点距离，半径，cm, 10
+r = 14  # 刺激距起始点距离，半径，cm, 10
 repeat = 6  # 每个条件重复次数
 stp_size = 0.5  # 起始点大小，半径，单位cm
-stp_pos_y = -4  # 起始点纵坐标，以屏幕中心点为原点，下方为负，横坐标为0，单位cm
+stp_pos_y = -7  # 起始点纵坐标，以屏幕中心点为原点，下方为负，横坐标为0，单位cm
 sound_file = ['sound\\right.wav', 'sound\\wrong.wav']
 # 生成trial
 df = generate(stim_size, theta, r, repeat, stp_size, stp_pos_y)
 df.to_csv('trial.csv')
 
-result = {'x0': [], 'y0': [], 'x1': [], 'y1': [], 'p': [], 't_p': [], 'rt': [], 'resp': [], 'soa': []}
+result = {'x0': [], 'y0': [], 'x1': [], 'y1': [], 'p': [], 't_p': [], 'rt': [], 'resp': [], 'soa': [], 'resp_start': []}
 
 win = visual.Window(size=(w, h), fullscr=True, units='cm', color=[0, 0, 0], monitor=mon)
 fix = visual.ImageStim(win, pos=(0, 0), image='icon/fix.png')
@@ -87,6 +89,8 @@ for i in range(len(df)):
     result['rt'].append(rt_i)
     result['resp'].append(resp_i)
     result['soa'].append(t_soa_i)
+    # result['resp_start'].append(rt_StartMove_i)
+
     win.flip()
     key = event.waitKeys(maxWait=0.2, keyList=['escape'])
     if key:
@@ -103,6 +107,7 @@ df['y1'] = result['y1']
 df['rt'] = result['rt']
 df['response'] = result['resp']
 df['soa'] = result['soa']
+# df['rt_start'] = result['resp_start']
 
 df['name'] = [name]*len(df)
 df['sex'] = [sex]*len(df)

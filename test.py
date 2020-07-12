@@ -34,6 +34,10 @@ while True:
     win.flip()
     if (slider.getRating() is not None) & (myMouse.isPressedIn(stp)):
         break
+    elif stp.contains(myMouse):
+        stp.fillColor = [1, 1, 0]
+    elif not stp.contains(myMouse):
+        stp.fillColor = [0, 1, 1]
 stp.fillColor = [0, 1, 0]
 # stim.draw()
 stp.draw()

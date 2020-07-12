@@ -26,7 +26,9 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, sound, pos_start=
     :param pos_start: 初始点，(x, y)
     :return: 返回 概率p, 概率判断时间t_p, 初始位置(x0, y0)，落点位置(x1, y1)，反应resp, 反应时rt, soa
     """
-    soa = [0.1, 0.2, 0.3]
+    # soa = [0.1, 0.2, 0.3]
+    # soa改为只有一种
+    soa = [0.1]
     stim.radius = df.size_r[i]
     stim.pos = get_xy(df.r[i], 90, pos_start)
     stp.pos = pos_start
@@ -34,9 +36,10 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, sound, pos_start=
     myMouse = event.Mouse()
     state = 'onset'
     clk.reset()  # 初始时钟
-    feedback = visual.Circle(win, radius=0.3, fillColor=[0.5, 0.5, 0.5], lineColor=[0.5, 0.5, 0.5])
+    feedback = visual.Circle(win, radius=0.2, fillColor=[0.5, 0.5, 0.5], lineColor=[0.5, 0.5, 0.5])
     feedback_sound_hit = Sound(sound[0])
     feedback_sound_miss = Sound(sound[1])
+    feedback_sound_no_response = Sound(value=1000, secs=0.5)
 
     while True:
         # 初始状态
@@ -44,7 +47,7 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, sound, pos_start=
             stim.draw()
             stp.draw()
             win.flip()
-            core.wait(1)
+            core.wait(0.5)
             state = 'wait'
         elif state == 'wait':
             stim.draw()
@@ -92,6 +95,7 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, sound, pos_start=
             win.flip()
             buttons = myMouse.getPos()
             t = clk.getTime()
+            t_StartMove = clk.getTime()
             if stim.contains(buttons):
                 state = 'hit'
                 resp = 'hit'
@@ -104,13 +108,15 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, sound, pos_start=
                 resp = 'no_response'
                 x1, y1 = myMouse.getPos()
                 rt = t
-                feedback_sound_miss.play()
+                feedback_sound_no_response.play()
             elif not (stp.contains(buttons)):
                 state = 'miss'
                 resp = 'miss'
                 x1, y1 = myMouse.getPos()
                 rt = t
                 feedback_sound_miss.play()
+            elif stp.contains(buttons):
+                rt_StartMove = t_StartMove
         # 击中
         elif state == 'hit':
             stp.draw()
@@ -151,5 +157,6 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, sound, pos_start=
             core.wait(0.4)
             feedback_sound_miss.stop()
             feedback_sound_hit.stop()
+            feedback_sound_no_response.stop()
             break
     return p, t_p, x0, y0, x1, y1, resp, rt, t_soa
