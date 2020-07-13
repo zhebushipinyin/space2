@@ -34,7 +34,7 @@ r = 14  # 刺激距起始点距离，半径，cm, 10
 repeat = 6  # 每个条件重复次数
 stp_size = 0.5  # 起始点大小，半径，单位cm
 stp_pos_y = -7  # 起始点纵坐标，以屏幕中心点为原点，下方为负，横坐标为0，单位cm
-sound_file = ['sound\\right.wav', 'sound\\wrong.wav']
+sound_file = ['sound\\right.wav', 'sound\\wrong.wav', 'sound\\no_resp.wav']
 # 生成trial
 df = generate(stim_size, theta, r, repeat, stp_size, stp_pos_y)
 df.to_csv('trial.csv')

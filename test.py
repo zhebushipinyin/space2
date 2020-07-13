@@ -2,9 +2,16 @@
 # -*- coding: utf-8 -*-
 
 import time
-from psychopy import visual, core, event, clock, monitors
+from psychopy import visual, core, event, clock, monitors, iohub
 from generate_data import *
 from target import *
+
+
+#: Constant for a Mouse Button Press Event.
+MOUSE_BUTTON_PRESS = 32
+
+#: Constant for a Mouse Button Release Event.
+MOUSE_BUTTON_RELEASE = 33
 
 w, h = (1280, 720)  # 显示器像素
 distance = 50
@@ -26,12 +33,17 @@ stp = visual.Circle(win, radius=0.5, pos=(0, -3), fillColor=[-1, -1, -1])
 slider = visual.Slider(win, ticks=range(101), labels=list(np.arange(11) * 10),
                        pos=(0, -5), size=(16, 0.5), granularity=0, style='rating')
 myMouse = event.Mouse()
+io = iohub.launchHubServer()
+mouse = io.devices.mouse
 # tar = Target(shape, r=6, h=0.5, theta0=0, size=60)
 while True:
+    stim.pos = myMouse.getPos()
     stim.draw()
     stp.draw()
     slider.draw()
     win.flip()
+    if mouse.getEvents(event_type=MOUSE_BUTTON_RELEASE):
+        print(1)
     if (slider.getRating() is not None) & (myMouse.isPressedIn(stp)):
         break
     elif stp.contains(myMouse):

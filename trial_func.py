@@ -39,7 +39,7 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, sound, pos_start=
     feedback = visual.Circle(win, radius=0.2, fillColor=[0.5, 0.5, 0.5], lineColor=[0.5, 0.5, 0.5])
     feedback_sound_hit = Sound(sound[0])
     feedback_sound_miss = Sound(sound[1])
-    feedback_sound_no_response = Sound(value=1000, secs=0.5)
+    feedback_sound_no_response = Sound(sound[2])
 
     while True:
         # 初始状态
