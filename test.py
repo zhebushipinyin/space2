@@ -29,7 +29,7 @@ mon.save()  # 保存显示器信息
 win = visual.Window(size=(w, h), fullscr=True, units='cm', color=[0, 0, 0], monitor=mon)
 shape = visual.ShapeStim(win, lineWidth=1.5, fillColor=[0, -1, 0])
 stim = visual.Circle(win, radius=0.3, pos=get_xy(10, 90, (0, -3)), fillColor=[-0.5, -0.5, 1], lineColor=[-0.5, -0.5, 1])
-stp = visual.Circle(win, radius=0.5, pos=(0, -3), fillColor=[-1, -1, -1])
+stp = visual.Circle(win, radius=0.5, pos=(0, -3), fillColor=[0.5, 0, -0.5])
 slider = visual.Slider(win, ticks=range(101), labels=list(np.arange(11) * 10),
                        pos=(0, -5), size=(16, 0.5), granularity=0, style='rating')
 myMouse = event.Mouse()
@@ -47,10 +47,10 @@ while True:
     if (slider.getRating() is not None) & (myMouse.isPressedIn(stp)):
         break
     elif stp.contains(myMouse):
-        stp.fillColor = [1, 1, 0]
+        stp.fillColor = [0.5, 0, -0.5]
     elif not stp.contains(myMouse):
-        stp.fillColor = [0, 1, 1]
-stp.fillColor = [0, 1, 0]
+        stp.fillColor = [1, 0, -1]
+stp.fillColor = [0.5, 0, -0.5]
 # stim.draw()
 stp.draw()
 win.flip()

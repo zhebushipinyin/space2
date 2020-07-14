@@ -32,6 +32,7 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, sound, pos_start=
     stim.radius = df.size_r[i]
     # stim.pos = get_xy(df.r[i], 90, pos_start)
     stim.pos = get_xy(df.r[i], df.theta0[i], pos_start)  # 刺激角度，无jitter
+    stim.fillColor = [0.5, 0, -0.5]
     stp.pos = pos_start
     stp.radius = df.stp_size[i]
     myMouse = event.Mouse()
@@ -122,7 +123,7 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, sound, pos_start=
         elif state == 'hit':
             stp.draw()
             stim.draw()
-            txt['hit'].pos = (x1-2, y1-2)
+            txt['hit'].pos = (x1, y1-2)
             txt['hit'].draw()
             feedback.pos = (x1, y1)
             feedback.draw()
@@ -132,7 +133,7 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, sound, pos_start=
         elif state == 'miss':
             stp.draw()
             stim.draw()
-            txt['miss'].pos = (x1-2, y1-2)
+            txt['miss'].pos = (x1, y1-2)
             txt['miss'].draw()
             feedback.pos = (x1, y1)
             feedback.draw()
