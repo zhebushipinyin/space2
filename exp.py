@@ -1,14 +1,24 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import time
-from psychopy import visual, core, event, clock, monitors
+from psychopy import visual, core, event, clock, monitors, gui
 from generate_data import *
 from trial_func import *
 
 
-name = input("请输入姓名：")
-sex = input("请输入性别(男：1; 女：0)：")
-age = input("请输入年龄：")
+# GUI
+myDlg = gui.Dlg(title=u"实验")
+myDlg.addText(u'被试信息')
+myDlg.addField('name:')
+myDlg.addField('sex:', choices=['male', 'female'])
+myDlg.addField('age:', 21)
+ok_data = myDlg.show()  # show dialog and wait for OK or Cancel
+if not myDlg.OK:
+    core.quit()
+name = ok_data[0]
+sex = ok_data[1]
+age = ok_data[2]
+
 
 w, h = (1280, 720)  # 显示器像素
 distance = 50
@@ -21,7 +31,7 @@ mon = monitors.Monitor(
     gamma=1,        # gamma值
     verbose=False)  # 是否输出详细信息
 # mon.setSizePix((3200, 1800))  # 设置显示器分辨率
-mon.setSizePix((1280, 720))  # 设置显示器分辨率
+mon.setSizePix((w, h))  # 设置显示器分辨率
 mon.save()  # 保存显示器信息
 
 # stim_size = [0.2, 0.4, 0.6, 0.8, 1, 1.2]  # 刺激半径大小，cm
@@ -34,9 +44,10 @@ r = 14  # 刺激距起始点距离，半径，cm, 10
 repeat = 6  # 每个条件重复次数
 stp_size = 0.5  # 起始点大小，半径，单位cm
 stp_pos_y = -7  # 起始点纵坐标，以屏幕中心点为原点，下方为负，横坐标为0，单位cm
+jitter = 10  # 角度随机范围，整数，默认+-10°
 sound_file = ['sound\\right.wav', 'sound\\wrong.wav', 'sound\\no_resp.wav']
 # 生成trial
-df = generate(stim_size, theta, r, repeat, stp_size, stp_pos_y)
+df = generate(stim_size, theta, r, repeat, stp_size, stp_pos_y, jitter)
 df.to_csv('trial.csv')
 
 result = {'x0': [], 'y0': [], 'x1': [], 'y1': [], 'p': [], 't_p': [], 'rt': [], 'resp': [], 'soa': [], 'resp_start': []}

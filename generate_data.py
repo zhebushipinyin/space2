@@ -2,9 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import pandas as pd
+import numpy as np
 
 
-def generate(stim_size=[0.2, 0.4, 0.6, 0.8, 1, 1.2], theta=[0, 30, 60], r=10, repeat=5, stp_size=0.5, stp_pos_y=-5):
+def generate(stim_size=[0.2, 0.4, 0.6, 0.8, 1, 1.2], theta=[0, 30, 60], r=10, repeat=5, stp_size=0.5, stp_pos_y=-5,
+             jitter=10):
     """
     生成实验的数据
     :param stim_size: 刺激半径大小，6个水平，单位cm
@@ -13,11 +15,13 @@ def generate(stim_size=[0.2, 0.4, 0.6, 0.8, 1, 1.2], theta=[0, 30, 60], r=10, re
     :param repeat: 每种条件重复次数
     :param stp_size: 起始点大小，半径，单位cm
     :param stp_pos_y: 起始点纵坐标，以屏幕中心点为原点，下方为负，横坐标为0，单位cm
-    :return: DataFrame
+    :param jitter: 角度随机范围，+-10°
+    return: DataFrame
     """
     df = pd.DataFrame()
     n = len(stim_size) * len(theta) * repeat
-    df['theta'] = theta * len(stim_size) * repeat
+    df['theta0'] = theta * len(stim_size) * repeat
+    df['theta'] = df['theta0'] + np.random.randint(-jitter, jitter, len(df['theta0']))
     theta_ = stim_size * len(theta)
     theta_.sort()
     df['size_r'] = theta_ * repeat
