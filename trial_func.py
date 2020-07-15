@@ -148,7 +148,7 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, sound, pos_start=
             txt['no_response'].draw()
             win.flip()
             t = clk.getTime()
-            if (t > 0.799) or (not (stp.contains(buttons))):
+            if (t > t_bound-0.01+0.2) or (not (stp.contains(buttons))):
                 x1, y1 = myMouse.getPos()
                 rt = t
                 state = 'quit'
