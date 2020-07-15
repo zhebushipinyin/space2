@@ -8,7 +8,7 @@ import random
 from psychopy.sound import Sound
 
 
-def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, sound, pos_start=(0, 0)):
+def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, sound, pos_start=(0, 0), t_bound=0.6):
     """
     执行运动能力测量试次，得分矩阵\\
     points = {'phase_1': ['+100', '0', '-300'], 'phase_2': ['+100', '0', '-300']}\\
@@ -24,6 +24,7 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, sound, pos_start=
     :param txt: 文本字典，txt = {'hit':hit_text, 'miss':miss_text, 'no_response': no_response_text}
     :param sound: 声音文件位置sound[0]:正确， sound[1]:错误
     :param pos_start: 初始点，(x, y)
+    :param t_bound: 反应时间上界，默认600ms
     :return: 返回 概率p, 概率判断时间t_p, 初始位置(x0, y0)，落点位置(x1, y1)，反应resp, 反应时rt, soa
     """
     # soa = [0.1, 0.2, 0.3]
@@ -38,7 +39,7 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, sound, pos_start=
     myMouse = event.Mouse()
     state = 'onset'
     clk.reset()  # 初始时钟
-    feedback = visual.Circle(win, radius=0.2, fillColor=[0.5, 0.5, 0.5], lineColor=[0.5, 0.5, 0.5])
+    feedback = visual.Circle(win, radius=0.15, fillColor=[0.5, 0.5, 0.5], lineColor=[0.5, 0.5, 0.5])
     feedback_sound_hit = Sound(sound[0])
     feedback_sound_miss = Sound(sound[1])
     feedback_sound_no_response = Sound(sound[2])
@@ -104,8 +105,8 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, sound, pos_start=
                 x1, y1 = myMouse.getPos()
                 rt = t
                 feedback_sound_hit.play()
-            # 超过700ms
-            elif t > 0.7:
+            # 超过600ms
+            elif t > t_bound-0.01:
                 state = 'no_response'
                 resp = 'no_response'
                 x1, y1 = myMouse.getPos()
@@ -145,10 +146,12 @@ def run_trial(i, win, df, clk, slider, stim, stp, text_p, txt, sound, pos_start=
             stim.draw()
             txt['no_response'].pos = (0, 5)
             txt['no_response'].draw()
-            feedback.pos = (x1, y1)
-            feedback.draw()
             win.flip()
-            state = 'quit'
+            t = clk.getTime()
+            if (t > 0.799) or (not (stp.contains(buttons))):
+                x1, y1 = myMouse.getPos()
+                rt = t
+                state = 'quit'
         # 结束本试次
         elif state == 'quit':
             stim.fillColor = [1, 0, -1]

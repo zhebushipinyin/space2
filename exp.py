@@ -37,14 +37,15 @@ mon.save()  # 保存显示器信息
 # stim_size = [0.2, 0.4, 0.6, 0.8, 1, 1.2]  # 刺激半径大小，cm
 # stim_size = [0.15, 0.3, 0.45, 0.6, 0.75, 0.9]
 # 刺激大小改为等比数列，五个水平
-stim_size = [0.2, 0.28, 0.39,  0.55, 0.75]
+stim_size = [0.16, 0.24, 0.32, 0.4, 0.48]
 # theta = [45, 90, 135]
 theta = [45, 135]  # 刺激角度，2个水平
-r = 14  # 刺激距起始点距离，半径，cm, 10
+r = 12.8  # 刺激距起始点距离，半径，cm, 10
 repeat = 6  # 每个条件重复次数
 stp_size = 0.5  # 起始点大小，半径，单位cm
-stp_pos_y = -7  # 起始点纵坐标，以屏幕中心点为原点，下方为负，横坐标为0，单位cm
+stp_pos_y = -6.4  # 起始点纵坐标，以屏幕中心点为原点，下方为负，横坐标为0，单位cm
 jitter = 10  # 角度随机范围，整数，默认+-10°
+t_bound = 0.6  # 反应时间上限， 600ms
 sound_file = ['sound\\right.wav', 'sound\\wrong.wav', 'sound\\no_resp.wav']
 # 生成trial
 df = generate(stim_size, theta, r, repeat, stp_size, stp_pos_y, jitter)
@@ -90,7 +91,7 @@ for i in range(len(df)):
     win.flip()
     core.wait(0.2)
     p_i, t_p_i, x0_i, y0_i, x1_i, y1_i, resp_i, rt_i, t_soa_i = run_trial(i, win, df, clk, slider, stim, stp, text_p,
-                                                                          txt, sound_file, pos_start)
+                                                                          txt, sound_file, pos_start, t_bound)
     result['p'].append(p_i)
     result['t_p'].append(t_p_i)
     result['x0'].append(x0_i)
@@ -124,6 +125,7 @@ df['name'] = [name]*len(df)
 df['sex'] = [sex]*len(df)
 df['age'] = [age]*len(df)
 df['distance'] = [distance]*len(df)
+df['t_bound'] = [t_bound]*len(df)
 df.to_csv('exp_data\\%s_%s.csv' % (name, time.strftime("%H-%M-%S")))
 visual.TextStim(win, text='您本试实验估计正确率为：%s%%' % np.round(df.p.mean(), 1), pos=(0, 1)).draw()
 visual.TextStim(win, text='您本试实验实际正确率为：%s%%' % np.round(len(df[df.response == 'hit'])*100/len(df), 1), pos=(0, -1)).draw()
