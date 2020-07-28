@@ -21,7 +21,7 @@ def generate(stim_size=[0.2, 0.4, 0.6, 0.8, 1, 1.2], theta=[0, 30, 60], r=10, re
     df = pd.DataFrame()
     n = len(stim_size) * len(theta) * repeat
     df['theta0'] = theta * len(stim_size) * repeat
-    df['theta'] = df['theta0'] + np.random.randint(-jitter, jitter, len(df['theta0']))
+    df['theta'] = df['theta0'] + np.random.randint(-jitter, jitter+1, len(df['theta0']))
     theta_ = stim_size * len(theta)
     theta_.sort()
     df['size_r'] = theta_ * repeat
