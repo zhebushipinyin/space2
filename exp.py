@@ -98,6 +98,7 @@ for i in range(len(df)):
     p_i, t_p_i, x0_i, y0_i, x1_i, y1_i, resp_i, rt_i, t_soa_i, point_i = run_trial(i, win, df, clk, slider, stim, stp,
                                                                                    aim, text_p, txt, sound_file,
                                                                                    pos_start, t_bound)
+    result['id'].append(i)
     result['p'].append(p_i)
     result['t_p'].append(t_p_i)
     result['x0'].append(x0_i)
@@ -117,6 +118,7 @@ for i in range(len(df)):
         win.close()
         core.quit()
     event.clearEvents()
+df['id'] = result['id']
 df['p'] = result['p']
 df['t_p'] = result['t_p']
 df['x0'] = result['x0']
