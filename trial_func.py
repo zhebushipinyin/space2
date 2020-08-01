@@ -31,6 +31,7 @@ def run_trial(i, win, df, clk, slider, stim, stp, aim, text_p, txt, sound, pos_s
     # soa = [0.1, 0.2, 0.3]
     # soa改为只有一种
     soa = [0.1]
+    color_stim = [-1, 200*2/255-1, 1]
     # stim.pos = get_xy(df.r[i], 90, pos_start)
     stim.pos = get_xy(df.r[i], df.theta[i], pos_start)  # 刺激角度，无jitter
     aim.pos = stim.pos
@@ -38,7 +39,8 @@ def run_trial(i, win, df, clk, slider, stim, stp, aim, text_p, txt, sound, pos_s
     stim.width = df.width[i]
     stim.height = df.height[i]
     stim.ori = df.theta[i] + (df.ori[i]-1)*90
-    stim.fillColor = [0.5, 0, -0.5]
+    stim.fillColor = color_stim
+    stim.lineColor = color_stim
 
     stp.pos = pos_start
     stp.radius = df.stp_size[i]
@@ -55,14 +57,14 @@ def run_trial(i, win, df, clk, slider, stim, stp, aim, text_p, txt, sound, pos_s
         if state == 'onset':
             stim.draw()
             stp.draw()
-            aim.draw()
+            # aim.draw()
             win.flip()
             core.wait(0.5)
             state = 'wait'
         elif state == 'wait':
             stim.draw()
             stp.draw()
-            aim.draw()
+            # aim.draw()
             slider.draw()
             text_p.draw()
             win.flip()
@@ -74,7 +76,7 @@ def run_trial(i, win, df, clk, slider, stim, stp, aim, text_p, txt, sound, pos_s
         elif state == 'rating':
             stim.draw()
             stp.draw()
-            aim.draw()
+            # aim.draw()
             slider.draw()
             p = slider.getRating()
             t_p = slider.getRT()
@@ -97,8 +99,8 @@ def run_trial(i, win, df, clk, slider, stim, stp, aim, text_p, txt, sound, pos_s
             core.wait(t_soa)
             win.flip()
             state = 'click'
-            stim.fillColor = [1, 0, -1]
-            stim.lineColor = [1, 1, 1]
+            stim.fillColor = color_stim
+            stim.lineColor = color_stim
             clk.reset()
         # 开始反应
         elif state == 'click':
@@ -173,8 +175,8 @@ def run_trial(i, win, df, clk, slider, stim, stp, aim, text_p, txt, sound, pos_s
                 state = 'quit'
         # 结束本试次
         elif state == 'quit':
-            stim.fillColor = [1, 0, -1]
-            stim.lineColor = [1, 1, 1]
+            stim.fillColor = color_stim
+            stim.lineColor = color_stim
             stp.fillColor = [0, 0, 0]
             stp.lineColor = [0.5, 0.5, 0.5]
             text_p.text = u'请估计你击中该目标的概率: %s%%' % '?'

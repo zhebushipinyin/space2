@@ -30,10 +30,11 @@ win = visual.Window(size=(w, h), fullscr=True, units='cm', color=[0, 0, 0], moni
 shape = visual.ShapeStim(win, lineWidth=1.5, fillColor=[0, -1, 0])
 
 stim = visual.Rect(win, width=0.4, height=1.6, pos=get_xy(12.8, 45, (0, -6.4)), ori=45
-                   , fillColor=[-0.5, -0.5, 1], lineColor=[-0.5, -0.5, 1])
-fix = visual.ImageStim(win, pos=get_xy(12.8, 45, (0, -6.4)), image='icon/fix.png', ori=45,size=0.4)
+                   , fillColor=[-1, 200*2/255-1, 1], lineColor=[-1, 200*2/255-1, 1])
+fix = visual.Circle(win, lineWidth=0, radius=0.05, pos=get_xy(12.8, 45, (0, -6.4)), fillColor=[1, 1, 1])
+# fix = visual.ImageStim(win, pos=get_xy(12.8, 45, (0, -6.4)), image='icon/fix.png', ori=45,size=0.4)
 
-stp = visual.Circle(win, lineWidth=5, radius=0.5, fillColor=[0, 0, 0], lineColor=[0.5, 0.5, 0.5])
+stp = visual.Circle(win, lineWidth=5, radius=0.5, fillColor=[-1, 200*2/255-1, 140*2/255-1], lineColor=[0.5, 0.5, 0.5])
 stp.pos = (0, -6.4)
 slider = visual.Slider(win, ticks=range(101), labels=list(np.arange(11) * 10),
                        pos=(0, -4), size=(16, 0.5), granularity=0, style='rating')
@@ -53,10 +54,10 @@ while True:
     if (slider.getRating() is not None) & (myMouse.isPressedIn(stp)):
         break
     elif stp.contains(myMouse):
-        stp.fillColor = [0.5, 0, -0.5]
+        stp.fillColor = [-1, 200*2/255-1, 140*2/255-1]
     elif not stp.contains(myMouse):
-        stp.fillColor = [1, 0, -1]
-stp.fillColor = [0.5, 0, -0.5]
+        stp.fillColor = [-1, 200*2/255-1, 140*2/255-1]
+stp.fillColor = [-1, 200*2/255-1, 140*2/255-1]
 # stim.draw()
 stp.draw()
 fix.draw()

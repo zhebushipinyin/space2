@@ -48,6 +48,7 @@ stp_size = 0.5  # 起始点大小，半径，单位cm
 stp_pos_y = -6.4  # 起始点纵坐标，以屏幕中心点为原点，下方为负，横坐标为0，单位cm
 jitter = 0  # 角度随机范围，整数，默认0
 t_bound = 0.6  # 反应时间上限， 600ms
+color_stim = [-1, 200*2/255-1, 1]
 sound_file = ['sound\\right.wav', 'sound\\wrong.wav', 'sound\\no_resp.wav']
 # 生成trial
 df = generate(stim_size, ratio, theta, ori,  r, repeat, stp_size, stp_pos_y)
@@ -59,17 +60,21 @@ result = {'id': [], 'x0': [], 'y0': [], 'x1': [], 'y1': [], 'dr': [],
 
 win = visual.Window(size=(w, h), fullscr=True, units='cm', color=[0, 0, 0], monitor=mon)
 fix = visual.ImageStim(win, pos=(0, 0), image='icon/fix.png')
-stim = visual.Rect(win, width=0.8, height=2.4, fillColor=[1, 0, -1], lineColor=[1, 1, 1], ori=45)
+
+stim = visual.Rect(win, width=0.8, height=2.4, fillColor=color_stim, lineColor=color_stim, ori=45)
+
 stp = visual.Circle(win, lineWidth=5, radius=0.5, fillColor=[0, 0, 0], lineColor=[0.5, 0.5, 0.5])
 slider = visual.Slider(win, ticks=range(101), labels=list(np.arange(11) * 10),
                        pos=(0, -4), size=(16, 0.5), granularity=0, style='rating')
-slider.marker.setColor([1, 0, -1], 'rgb')
+slider.marker.setColor(color_stim, 'rgb')
+
 hit_text = visual.TextStim(win, bold=True, color='yellow', text=u'击中')
-miss_text = visual.TextStim(win, bold=True, color='purple', text=u'未击中')
-no_response_text = visual.TextStim(win, bold=True, color='purple', text=u'超时')
+miss_text = visual.TextStim(win, bold=True, color='black', text=u'未击中')
+no_response_text = visual.TextStim(win, bold=True, color='red', text=u'超时')
+
 text_p = visual.TextStim(win, text=u'请估计你击中该目标的概率: %s%%' % "?", pos=(-4.5, -3), height=0.5)
 fix = visual.ImageStim(win, pos=(0, 0), image='icon/fix.png')
-aim = visual.ImageStim(win, image='icon/fix.png', size=min(stim_size))
+aim = visual.Circle(win, lineWidth=0, radius=0.05, pos=get_xy(12.8, 45, (0, -6.4)), fillColor=[1, 1, 1])
 txt = {'hit': hit_text, 'miss': miss_text, 'no_response': no_response_text}
 # r = 0.4*h
 myMouse = event.Mouse()
@@ -129,6 +134,7 @@ df['rt'] = result['rt']
 df['response'] = result['resp']
 df['soa'] = result['soa']
 df['points'] = result['points']
+df['hit'] = df['response']=='hit'
 
 df['name'] = [name]*len(df)
 df['sex'] = [sex]*len(df)
@@ -136,8 +142,10 @@ df['age'] = [age]*len(df)
 df['distance'] = [distance]*len(df)
 df['t_bound'] = [t_bound]*len(df)
 df.to_csv('exp_data\\%s_%s.csv' % (name, time.strftime("%y-%m-%d-%H-%M")))
-visual.TextStim(win, text='您本试实验估计正确率为：%s%%' % np.round(df.p.mean(), 1), pos=(0, 1)).draw()
-visual.TextStim(win, text='您本试实验实际正确率为：%s%%' % np.round(len(df[df.response == 'hit'])*100/len(df), 1), pos=(0, -1)).draw()
+judge_point = int(np.sqrt(np.mean((df.p-df.hit*100)**2))+0.5)
+all_point = df.points.sum()
+visual.TextStim(win, text='您本试实验判断偏差为：%s' % judge_point, pos=(0, 1)).draw()
+visual.TextStim(win, text='您本试实验点击总分为：%s分' % all_point, pos=(0, -1)).draw()
 visual.TextStim(win, text='本次实验结束', pos=(-8, 4)).draw()
 win.flip()
 core.wait(5)
