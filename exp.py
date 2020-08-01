@@ -134,18 +134,20 @@ df['rt'] = result['rt']
 df['response'] = result['resp']
 df['soa'] = result['soa']
 df['points'] = result['points']
-df['hit'] = df['response']=='hit'
+df['hit'] = df['response'] == 'hit'
 
 df['name'] = [name]*len(df)
 df['sex'] = [sex]*len(df)
 df['age'] = [age]*len(df)
 df['distance'] = [distance]*len(df)
 df['t_bound'] = [t_bound]*len(df)
+
+
 df.to_csv('exp_data\\%s_%s.csv' % (name, time.strftime("%y-%m-%d-%H-%M")))
-judge_point = int(np.sqrt(np.mean((df.p-df.hit*100)**2))+0.5)
-all_point = df.points.sum()
-visual.TextStim(win, text='您本试实验判断偏差为：%s' % judge_point, pos=(0, 1)).draw()
-visual.TextStim(win, text='您本试实验点击总分为：%s分' % all_point, pos=(0, -1)).draw()
+judge_point = int(2*max(50-abs(df.p.mean()-100*df.hit.mean()), 0)+0.5)
+all_point = int(df.points.mean()+0.5)
+visual.TextStim(win, text='您本试实验判断偏差为：%s/100分' % judge_point, pos=(0, 1)).draw()
+visual.TextStim(win, text='您本试实验点击平均分为：%s/100分' % all_point, pos=(0, -1)).draw()
 visual.TextStim(win, text='本次实验结束', pos=(-8, 4)).draw()
 win.flip()
 core.wait(5)
