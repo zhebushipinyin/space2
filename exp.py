@@ -36,26 +36,30 @@ mon.save()  # 保存显示器信息
 
 # stim_size = [0.2, 0.4, 0.6, 0.8, 1, 1.2]  # 刺激半径大小，cm
 # stim_size = [0.15, 0.3, 0.45, 0.6, 0.75, 0.9]
-# 刺激大小改为等比数列，五个水平
-stim_size = [0.16, 0.24, 0.32, 0.4, 0.48]
+# 刺激大小（宽度）改为等比数列，三个水平，对应长度为宽度*4
+stim_size = [0.24, 0.36, 0.48]
+ratio = 4  # 长宽比
 # theta = [45, 90, 135]
 theta = [45, 135]  # 刺激角度，2个水平
+ori = [1, 0]  # 刺激与方位角的关系，ori=1表示刺激长轴与方位角一致
 r = 12.8  # 刺激距起始点距离，半径，cm, 10
-repeat = 6  # 每个条件重复次数
+repeat = 5  # 每个条件重复次数
 stp_size = 0.5  # 起始点大小，半径，单位cm
 stp_pos_y = -6.4  # 起始点纵坐标，以屏幕中心点为原点，下方为负，横坐标为0，单位cm
-jitter = 10  # 角度随机范围，整数，默认+-10°
+jitter = 0  # 角度随机范围，整数，默认0
 t_bound = 0.6  # 反应时间上限， 600ms
 sound_file = ['sound\\right.wav', 'sound\\wrong.wav', 'sound\\no_resp.wav']
 # 生成trial
-df = generate(stim_size, theta, r, repeat, stp_size, stp_pos_y, jitter)
+df = generate(stim_size, ratio, theta, ori,  r, repeat, stp_size, stp_pos_y)
+
 df.to_csv('trial.csv')
 
-result = {'x0': [], 'y0': [], 'x1': [], 'y1': [], 'p': [], 't_p': [], 'rt': [], 'resp': [], 'soa': [], 'resp_start': []}
+result = {'id': [], 'x0': [], 'y0': [], 'x1': [], 'y1': [], 'dr': [],
+          'p': [], 't_p': [], 'rt': [], 'resp': [], 'soa': [], 'points': []}
 
 win = visual.Window(size=(w, h), fullscr=True, units='cm', color=[0, 0, 0], monitor=mon)
 fix = visual.ImageStim(win, pos=(0, 0), image='icon/fix.png')
-stim = visual.Circle(win, radius=0.2, fillColor=[1, 0, -1], lineColor=[1, 1, 1])
+stim = visual.Rect(win, width=0.8, height=2.4, fillColor=[1, 0, -1], lineColor=[1, 1, 1], ori=45)
 stp = visual.Circle(win, lineWidth=5, radius=0.5, fillColor=[0, 0, 0], lineColor=[0.5, 0.5, 0.5])
 slider = visual.Slider(win, ticks=range(101), labels=list(np.arange(11) * 10),
                        pos=(0, -4), size=(16, 0.5), granularity=0, style='rating')
@@ -65,6 +69,7 @@ miss_text = visual.TextStim(win, bold=True, color='purple', text=u'未击中')
 no_response_text = visual.TextStim(win, bold=True, color='purple', text=u'超时')
 text_p = visual.TextStim(win, text=u'请估计你击中该目标的概率: %s%%' % "?", pos=(-4.5, -3), height=0.5)
 fix = visual.ImageStim(win, pos=(0, 0), image='icon/fix.png')
+aim = visual.ImageStim(win, image='icon/fix.png', size=min(stim_size))
 txt = {'hit': hit_text, 'miss': miss_text, 'no_response': no_response_text}
 # r = 0.4*h
 myMouse = event.Mouse()
@@ -90,8 +95,9 @@ for i in range(len(df)):
     fix.draw()
     win.flip()
     core.wait(0.2)
-    p_i, t_p_i, x0_i, y0_i, x1_i, y1_i, resp_i, rt_i, t_soa_i = run_trial(i, win, df, clk, slider, stim, stp, text_p,
-                                                                          txt, sound_file, pos_start, t_bound)
+    p_i, t_p_i, x0_i, y0_i, x1_i, y1_i, resp_i, rt_i, t_soa_i, point_i = run_trial(i, win, df, clk, slider, stim, stp,
+                                                                                   aim, text_p, txt, sound_file,
+                                                                                   pos_start, t_bound)
     result['p'].append(p_i)
     result['t_p'].append(t_p_i)
     result['x0'].append(x0_i)
@@ -101,6 +107,7 @@ for i in range(len(df)):
     result['rt'].append(rt_i)
     result['resp'].append(resp_i)
     result['soa'].append(t_soa_i)
+    result['points'].append(point_i)
     # result['resp_start'].append(rt_StartMove_i)
 
     win.flip()
@@ -119,7 +126,7 @@ df['y1'] = result['y1']
 df['rt'] = result['rt']
 df['response'] = result['resp']
 df['soa'] = result['soa']
-# df['rt_start'] = result['resp_start']
+df['points'] = result['points']
 
 df['name'] = [name]*len(df)
 df['sex'] = [sex]*len(df)

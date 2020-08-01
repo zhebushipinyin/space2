@@ -14,6 +14,20 @@ def get_xy(r, theta, pos_start=(0, 0)):
     return r * np.array((np.cos(theta * np.pi / 180), np.sin(theta * np.pi / 180))) + np.array(pos_start)
 
 
+def get_rotate(Δx,  Δy, theta, pos_start=(0, 0)):
+    """
+    将极坐标转换为直角坐标
+    :param Δx: 相对于旋转中心的横坐标
+    :param Δy: 相较旋转中心的纵坐标
+    :param theta: 旋转角度°
+    :param pos_start: 初始点，(x0, y0)
+    :return: 直角坐标(x, y)
+    """
+    ca = np.cos(theta * np.pi / 180)
+    sa = np.sin(theta * np.pi / 180)
+    return np.array((Δx*ca-Δy*sa, Δx*sa+Δy*ca)) + np.array(pos_start)
+
+
 def get_pos(r, theta0, omega, mt):
     """
     计算时间 t 时的极坐标

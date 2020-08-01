@@ -28,18 +28,24 @@ mon.setSizePix((1280, 720))  # 设置显示器分辨率
 mon.save()  # 保存显示器信息
 win = visual.Window(size=(w, h), fullscr=True, units='cm', color=[0, 0, 0], monitor=mon)
 shape = visual.ShapeStim(win, lineWidth=1.5, fillColor=[0, -1, 0])
-stim = visual.Circle(win, radius=0.3, pos=get_xy(10, 90, (0, -3)), fillColor=[-0.5, -0.5, 1], lineColor=[-0.5, -0.5, 1])
-stp = visual.Circle(win, radius=0.5, pos=(0, -3), fillColor=[0.5, 0, -0.5])
+
+stim = visual.Rect(win, width=0.4, height=1.6, pos=get_xy(12.8, 45, (0, -6.4)), ori=45
+                   , fillColor=[-0.5, -0.5, 1], lineColor=[-0.5, -0.5, 1])
+fix = visual.ImageStim(win, pos=get_xy(12.8, 45, (0, -6.4)), image='icon/fix.png', ori=45,size=0.4)
+
+stp = visual.Circle(win, lineWidth=5, radius=0.5, fillColor=[0, 0, 0], lineColor=[0.5, 0.5, 0.5])
+stp.pos = (0, -6.4)
 slider = visual.Slider(win, ticks=range(101), labels=list(np.arange(11) * 10),
-                       pos=(0, -5), size=(16, 0.5), granularity=0, style='rating')
+                       pos=(0, -4), size=(16, 0.5), granularity=0, style='rating')
 myMouse = event.Mouse()
 io = iohub.launchHubServer()
 mouse = io.devices.mouse
 # tar = Target(shape, r=6, h=0.5, theta0=0, size=60)
 while True:
-    stim.pos = myMouse.getPos()
+    # stim.pos = myMouse.getPos()
     stim.draw()
     stp.draw()
+    fix.draw()
     slider.draw()
     win.flip()
     if mouse.getEvents(event_type=MOUSE_BUTTON_RELEASE):
@@ -53,6 +59,7 @@ while True:
 stp.fillColor = [0.5, 0, -0.5]
 # stim.draw()
 stp.draw()
+fix.draw()
 win.flip()
 print(slider.getRating(), slider.getRT(), slider.getMouseResponses())
 win.flip()
@@ -62,6 +69,7 @@ stp.fillColor = [0.5, 0.5, 0.5]
 while True:
     stim.draw()
     stp.draw()
+    fix.draw()
     win.flip()
     buttons = myMouse.getPressed(getTime=True)
     if myMouse.isPressedIn(stim):
