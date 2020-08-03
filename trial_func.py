@@ -180,7 +180,7 @@ def run_trial(i, win, df, clk, slider, stim, stp, aim, text_p, txt, sound, pos_s
             stp.fillColor = [0, 0, 0]
             stp.lineColor = [0.5, 0.5, 0.5]
             text_p.text = u'请估计你击中该目标的概率: %s%%' % '?'
-            core.wait(0.4)
+            core.wait(0.5)  # 反馈呈现时间
             feedback_sound_miss.stop()
             feedback_sound_hit.stop()
             feedback_sound_no_response.stop()
