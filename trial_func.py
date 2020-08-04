@@ -122,7 +122,7 @@ def run_trial(i, win, df, clk, slider, stim, stp, aim, text_p, txt, sound, pos_s
             elif t > t_bound-0.01:
                 state = 'no_response'
                 resp = 'no_response'
-                x1, y1 = myMouse.getPos()
+                x1, y1 = get_xy(df.r[i], df.theta[i], pos_start)
                 point = -50
                 rt = t
                 feedback_sound_no_response.play()
@@ -164,7 +164,8 @@ def run_trial(i, win, df, clk, slider, stim, stp, aim, text_p, txt, sound, pos_s
             stp.draw()
             stim.draw()
             aim.draw()
-            txt['no_response'].pos = (0, 5)
+
+            txt['no_response'].pos = (x1, y1-2)
             txt['no_response'].text = u'超时：%s分' % (point)
             txt['no_response'].draw()
             win.flip()

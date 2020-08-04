@@ -69,7 +69,7 @@ slider = visual.Slider(win, ticks=range(101), labels=list(np.arange(11) * 10),
 slider.marker.setColor(color_stim, 'rgb')
 
 hit_text = visual.TextStim(win, bold=True, color='yellow', text=u'击中')
-miss_text = visual.TextStim(win, bold=True, color='black', text=u'未击中')
+miss_text = visual.TextStim(win, bold=True, color=[0, 1, 0], text=u'未击中')
 no_response_text = visual.TextStim(win, bold=True, color='red', text=u'超时')
 
 text_p = visual.TextStim(win, text=u'请估计你击中该目标的概率: %s%%' % "?", pos=(-4.5, -3), height=0.5)
